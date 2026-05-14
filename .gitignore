@@ -17,6 +17,7 @@ tmp/
 temp/
 .cache/
 .vercel/
+.vercel-home/
 .env
 .env.local
 .env.*.local
@@ -24,3 +25,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+.vercel
