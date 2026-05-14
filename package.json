@@ -8,11 +8,14 @@
   "type": "module",
   "scripts": {
     "dev": "electron-vite dev",
+    "dev:web": "vite --config vite.web.config.ts",
     "build": "electron-vite build",
+    "build:web": "vite build --config vite.web.config.ts",
     "dist": "npm run build && electron-builder --config electron-builder.config.cjs --win nsis portable",
     "publish:update:github": "node scripts/publish-github-release.mjs",
     "publish:update:supabase": "node scripts/upload-supabase-update.mjs",
     "preview": "electron-vite preview",
+    "preview:web": "vite preview --config vite.web.config.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

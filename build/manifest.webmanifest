@@ -1,0 +1,21 @@
+{
+  "name": "AVY",
+  "short_name": "AVY",
+  "description": "AVY yatirim takibi, analiz ve terminal deneyimi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020508",
+  "theme_color": "#020508",
+  "icons": [
+    {
+      "src": "/icon-sizes/avy-logo-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-sizes/avy-logo-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
+}
