@@ -58,6 +58,10 @@ const App = () => {
   const [isPortfolioRefreshing, setIsPortfolioRefreshing] = useState(false)
   const [activeMarketTabId, setActiveMarketTabId] = useState('crypto')
   const [isMarketPanelCollapsed, setIsMarketPanelCollapsed] = useState(false)
+  const [isMobileViewport, setIsMobileViewport] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 900 : false
+  )
+  const [mobileTerminalTab, setMobileTerminalTab] = useState<'watchlist' | 'analysis'>('watchlist')
   const socialFeaturesEnabled = false
   const queryClient = useQueryClient()
 
@@ -594,6 +598,16 @@ const App = () => {
   }, [settings.themeMode])
 
   useEffect(() => {
+    const media = window.matchMedia('(max-width: 900px)')
+    const syncViewport = () => setIsMobileViewport(media.matches)
+
+    syncViewport()
+    media.addEventListener('change', syncViewport)
+
+    return () => media.removeEventListener('change', syncViewport)
+  }, [])
+
+  useEffect(() => {
     if (!socialFeaturesEnabled && activeScreen === 'social') {
       setActiveScreen('home')
     }
@@ -677,6 +691,28 @@ const App = () => {
       </div>
     )
 
+  const analysisRailContent =
+    selectedSnapshot && selectedIndicators ? (
+      <TerminalAnalysisRail
+        snapshot={selectedSnapshot}
+        liveQuote={selectedOverviewItem?.quote}
+        indicators={selectedIndicators}
+        insight={selectedAiInsight}
+        intelligence={selectedAssetIntelligence}
+        newsCount={newsQuery.data?.length ?? 0}
+        alerts={assetAlerts}
+        onCreateResistanceAlert={handleCreateResistanceAlert}
+        onCreateSupportAlert={handleCreateSupportAlert}
+        onCreateMomentumAlert={handleCreateMomentumAlert}
+        onCreatePullbackAlert={handleCreatePullbackAlert}
+      />
+    ) : (
+      <StateCard
+        title="Sağ panel hazır"
+        description="Bir varlık seçtiğinde kısa analiz, alarm kısayolları ve haber etkisi burada görünür."
+      />
+    )
+
   const terminalRightRail = (
     <MarketWatchlistPanel
       tabs={marketTabs}
@@ -701,33 +737,66 @@ const App = () => {
       onReorderWatchlistAsset={reorderWatchlistAsset}
       onToggleCollapse={() => setIsMarketPanelCollapsed((value) => !value)}
     >
-      {selectedSnapshot && selectedIndicators ? (
-          <TerminalAnalysisRail
-            snapshot={selectedSnapshot}
-            liveQuote={selectedOverviewItem?.quote}
-            indicators={selectedIndicators}
-            insight={selectedAiInsight}
-            intelligence={selectedAssetIntelligence}
-          newsCount={newsQuery.data?.length ?? 0}
-          alerts={assetAlerts}
-          onCreateResistanceAlert={handleCreateResistanceAlert}
-          onCreateSupportAlert={handleCreateSupportAlert}
-          onCreateMomentumAlert={handleCreateMomentumAlert}
-          onCreatePullbackAlert={handleCreatePullbackAlert}
-        />
-      ) : (
-        <StateCard
-          title="Sağ panel hazır"
-          description="Bir varlık seçtiğinde kısa analiz, alarm kısayolları ve haber etkisi burada görünür."
-        />
-      )}
+      {analysisRailContent}
     </MarketWatchlistPanel>
+  )
+
+  const mobileTerminalRail = (
+    <section className="mobile-terminal-panels">
+      <div className="mobile-terminal-panels__tabs">
+        <button
+          type="button"
+          className={mobileTerminalTab === 'watchlist' ? 'chip chip--active' : 'chip'}
+          onClick={() => setMobileTerminalTab('watchlist')}
+        >
+          Listeler
+        </button>
+        <button
+          type="button"
+          className={mobileTerminalTab === 'analysis' ? 'chip chip--active' : 'chip'}
+          onClick={() => setMobileTerminalTab('analysis')}
+        >
+          Analiz
+        </button>
+      </div>
+
+      <div className="mobile-terminal-panels__body">
+        {mobileTerminalTab === 'watchlist' ? (
+          <MarketWatchlistPanel
+            tabs={marketTabs}
+            activeTabId={activeMarketTabId}
+            activeWatchlistId={activeWatchlistId}
+            selectedAssetId={selectedAssetId}
+            favorites={favorites}
+            selectedSnapshot={selectedSnapshot}
+            searchTerm={searchTerm}
+            searchResults={searchResults}
+            isSearchLoading={searchQuery.isLoading}
+            isCollapsed={false}
+            onSearchTermChange={setSearchTerm}
+            onTabChange={handleChangeMarketTab}
+            onSelectAsset={handleSelectAsset}
+            onToggleFavorite={toggleFavorite}
+            onAddToWatchlist={addAssetToWatchlist}
+            onRemoveFromWatchlist={removeAssetFromWatchlist}
+            onCreateWatchlist={createWatchlist}
+            onRenameWatchlist={renameWatchlist}
+            onDeleteWatchlist={deleteWatchlist}
+            onReorderWatchlistAsset={reorderWatchlistAsset}
+            onToggleCollapse={() => undefined}
+          />
+        ) : (
+          analysisRailContent
+        )}
+      </div>
+    </section>
   )
 
   return (
     <div
       className={[
         'app-shell',
+        isMobileViewport ? 'app-shell--mobile' : '',
         usesWideShell ? 'app-shell--workspace' : '',
         usesWideShell && isMarketPanelCollapsed ? 'app-shell--market-panel-collapsed' : ''
       ]
@@ -828,30 +897,35 @@ const App = () => {
             <InvestorsDashboard overviewLookup={overviewMap} onSelectAsset={handleSelectAsset} />
           </div>
         ) : (
-          terminalCenter
+          <>
+            {terminalCenter}
+            {isMobileViewport ? mobileTerminalRail : null}
+          </>
         )}
       </main>
 
-      <aside
-        className={
-          isProfileScreen
-            ? 'app-shell__right'
-            : `app-shell__right app-shell__right--terminal${isMarketPanelCollapsed ? ' app-shell__right--terminal-collapsed' : ''}`
-        }
-      >
-        {isProfileScreen ? (
-          <ProfileSidebar
-            profile={currentUser}
-            friendCount={socialFeaturesEnabled ? social.contacts.length : 0}
-            holdingCount={portfolio.summary.holdings.length}
-            settings={settings}
-            portfolioSummary={portfolio.summary}
-            cloudSync={cloudSync}
-          />
-        ) : (
-          terminalRightRail
-        )}
-      </aside>
+      {!isMobileViewport || isProfileScreen ? (
+        <aside
+          className={
+            isProfileScreen
+              ? 'app-shell__right'
+              : `app-shell__right app-shell__right--terminal${isMarketPanelCollapsed ? ' app-shell__right--terminal-collapsed' : ''}`
+          }
+        >
+          {isProfileScreen ? (
+            <ProfileSidebar
+              profile={currentUser}
+              friendCount={socialFeaturesEnabled ? social.contacts.length : 0}
+              holdingCount={portfolio.summary.holdings.length}
+              settings={settings}
+              portfolioSummary={portfolio.summary}
+              cloudSync={cloudSync}
+            />
+          ) : (
+            terminalRightRail
+          )}
+        </aside>
+      ) : null}
     </div>
   )
 }

@@ -4246,3 +4246,231 @@ textarea {
     grid-template-columns: minmax(0, 1fr) 256px;
   }
 }
+
+.mobile-terminal-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.mobile-terminal-panels__tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mobile-terminal-panels__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-terminal-panels__body {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .app-shell--mobile,
+  .app-shell--mobile.app-shell--workspace,
+  .app-shell--mobile.app-shell--market-panel-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.5rem;
+  }
+
+  .app-shell--mobile .app-shell__center,
+  .app-shell--mobile .app-shell__right {
+    min-width: 0;
+  }
+
+  .app-shell--mobile .app-shell__right,
+  .app-shell--mobile .app-shell__right--terminal {
+    position: static;
+    top: auto;
+    height: auto;
+  }
+
+  .app-topbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    padding-top: 0.1rem;
+  }
+
+  .app-topbar__actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.45rem;
+    overflow-x: auto;
+    padding-bottom: 0.1rem;
+    scrollbar-width: none;
+  }
+
+  .app-topbar__actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toolbar-terminal-nav {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .terminal-icon-rail--horizontal {
+    gap: 0.28rem;
+  }
+
+  .terminal-icon-rail--horizontal .terminal-icon-rail__button,
+  .toolbar-icon-button,
+  .toolbar-profile-button {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    border-radius: 14px;
+  }
+
+  .toolbar-profile-button {
+    padding: 0;
+    justify-content: center;
+  }
+
+  .toolbar-profile-button__copy,
+  .toolbar-profile-button > svg:last-child {
+    display: none;
+  }
+
+  .toolbar-popover__panel {
+    width: min(92vw, 420px);
+  }
+
+  .toolbar-popover__panel--profile {
+    width: min(84vw, 280px);
+  }
+
+  .terminal-center-stack {
+    gap: 0.6rem;
+  }
+
+  .terminal-asset-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding: 0.72rem;
+  }
+
+  .terminal-asset-bar__identity,
+  .terminal-asset-bar__price {
+    justify-content: space-between;
+  }
+
+  .terminal-asset-bar__stats {
+    justify-content: space-between;
+  }
+
+  .chart-toolbar--terminal {
+    gap: 0.42rem;
+  }
+
+  .chart-toolbar__cluster {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .chart-toolbar__cluster--actions {
+    justify-content: flex-start;
+  }
+
+  .chart-layout-shell {
+    min-height: 0;
+  }
+
+  .chart-layout {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .chart-tool-rail {
+    height: auto;
+    max-height: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.38rem;
+    padding: 0.32rem;
+  }
+
+  .chart-tool-rail--grouped {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .chart-tool-group {
+    min-width: 0;
+  }
+
+  .chart-tool-button,
+  .chart-tool-button[data-group-span='full'] {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .chart-tool-button[data-group-start='true'] {
+    margin-top: 0;
+  }
+
+  .chart-tool-popover {
+    left: 0;
+    right: auto;
+    top: calc(100% + 0.35rem);
+    min-width: 148px;
+  }
+
+  .chart-stage,
+  .chart-surface {
+    height: min(56vh, 430px);
+  }
+
+  .market-right-rail {
+    gap: 0.5rem;
+    height: auto;
+  }
+
+  .panel--terminal-watchlist .panel__header {
+    margin-bottom: 0.45rem;
+  }
+
+  .terminal-watchlist__topbar {
+    gap: 0.45rem;
+  }
+
+  .terminal-watchlist__tabs {
+    gap: 0.35rem;
+  }
+
+  .terminal-watchlist__viewport {
+    height: min(46vh, 336px);
+  }
+
+  .terminal-selected-asset-card--compact {
+    padding: 0.72rem;
+  }
+
+  .terminal-analysis-stack {
+    gap: 0.5rem;
+  }
+
+  .terminal-mini-grid,
+  .terminal-action-grid,
+  .ai-dashboard-grid,
+  .ai-dashboard-grid--balanced {
+    grid-template-columns: 1fr;
+  }
+
+  .terminal-section-page .hero-card,
+  .terminal-section-page .panel,
+  .terminal-center-stack .panel,
+  .terminal-fold {
+    border-radius: 18px;
+  }
+}
